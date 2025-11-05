@@ -2,7 +2,7 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 const internRoutes = require('./routes/internRoutes');
 const trainerRoutes = require('./routes/trainerRoutes');
-const reportRoutes = require('./routes/roportRoutes');
+const reportRoutes = require('./routes/reportRoutes');
 const app = express();
 
 /* ---------------------- 1) RATE LIMITING (before routes) --------------------- */

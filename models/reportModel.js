@@ -17,10 +17,10 @@ const reportSchema = mongoose.Schema({
     trim: true,
     // required: [true, 'A task should have a description'],
   },
-  intern: {
+  user: {
     type: mongoose.Schema.ObjectId,
-    ref: 'Intern',
-    required: [true, 'A task should have a writer/intern id'],
+    ref: 'User',
+    required: [true, 'A task should have a user id'],
   },
   mentor: {
     type: String,
@@ -45,19 +45,15 @@ const reportSchema = mongoose.Schema({
       'Please enter a valid time format (e.g., 2:30 PM)',
     ],
   },
-  // result: {
-  //   type: String,
-  //   trim: true,
-  // },
 });
 
-reportSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'intern',
-    select: 'name stack',
-  });
-  next();
-});
+// reportSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'intern',
+//     select: 'name stack',
+//   });
+//   next();
+// });
 
 const Report = mongoose.model('Report', reportSchema);
 

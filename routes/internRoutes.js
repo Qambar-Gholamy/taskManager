@@ -1,6 +1,6 @@
 const express = require('express');
 const internController = require('../controllers/internController');
-const reportRoutes = require('./roportRoutes');
+const reportRoutes = require('./reportRoutes');
 const authController = require('../controllers/authController');
 
 const Router = express.Router();
