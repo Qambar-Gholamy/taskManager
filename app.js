@@ -1,7 +1,6 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
-const internRoutes = require('./routes/internRoutes');
-const trainerRoutes = require('./routes/trainerRoutes');
+const userRoutes = require('./routes/userRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 const app = express();
 
@@ -20,8 +19,7 @@ app.use('/taskManager', limiter);
 // app.use(express.static(`${__dirname}/public`));
 
 /* ------------------------------- 4) ROUTES ---------------------------------- */
-app.use('/taskManager/interns', internRoutes);
-app.use('/taskManager/trainers', trainerRoutes);
+app.use('/taskManager', userRoutes);
 app.use('/taskManager/reports', reportRoutes);
 /* --------------------------- 5) 404 HANDLER --------------------------------- */
 app.all(/.*/, (req, res, next) => {

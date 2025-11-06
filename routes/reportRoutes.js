@@ -1,21 +1,20 @@
 const reportController = require('../controllers/reportController');
-const internController = require('../controllers/internController');
-const trainerController = require('../controllers/trainerController');
 const express = require('express');
 const Router = express.Router({ mergeParams: true });
+const authController = require('../controllers/authController');
 
 Router.route('/')
   .get(reportController.getAllReports)
-  .post(internController.protect, reportController.createReport);
+  .post(authController.protect, reportController.createReport);
 
-Router.get('/:id', internController.protect, reportController.getReport);
+Router.get('/:id', authController.protect, reportController.getReport);
 
 Router.route('/:id').patch(
-  internController.protect,
+  authController.protect,
   reportController.updateReport,
 );
 Router.route('/:id').delete(
-  internController.protect,
+  authController.protect,
   reportController.deleteReport,
 );
 module.exports = Router;
