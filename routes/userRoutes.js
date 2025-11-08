@@ -5,15 +5,17 @@ const authController = require('../controllers/authController');
 
 const Router = express.Router();
 
-/// for creating account
+// for creating account
 Router.route('/signup').post(authController.signup);
 Router.post('/login', authController.login);
 
 Router.use('/:UserId/reports', reportRoutes);
 
-Router.route('/')
-  .get(userController.getAllUser)
-  .post(userController.createUser);
+Router.route('/').post(userController.createUser);
+
+Router.route('/interns').get(userController.getAllInterns);
+
+Router.route('/trainers').get(userController.getAllTrainers);
 
 Router.route('/:id')
   .get(authController.protect, userController.getUser)

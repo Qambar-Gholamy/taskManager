@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'please enter your password'],
-    minlegth: 8,
+    minlength: 8,
     select: false,
   },
   role: {
@@ -57,16 +57,19 @@ userSchema.virtual('reports', {
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
+
   this.password = await bcrypt.hash(this.password, 12);
+
   this.passwordConfirm = undefined;
+
   next();
 });
-
+/////// FIXME
 userSchema.methods.correctPassword = async function (
   condidatePassword,
-  internPassword,
+  userPassword,
 ) {
-  return await bcrypt.compare(condidatePassword, internPassword);
+  return condidatePassword === userPassword;
 };
 
 const User = mongoose.model('User', userSchema);

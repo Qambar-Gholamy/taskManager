@@ -23,7 +23,8 @@ const reportSchema = mongoose.Schema({
     required: [true, 'A task should have a user id'],
   },
   mentor: {
-    type: String,
+    type: mongoose.Schema.ObjectId,
+    ref: 'Report',
     required: [true, 'please enter the name of the mentor'],
   },
   signIn: {

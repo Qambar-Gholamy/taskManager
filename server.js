@@ -21,7 +21,7 @@ mongoose.connect(process.env.DATABASE_LOCAL).then(() => {
   console.log('success!');
 });
 
-// console.log(process.env);
+/// console.log(process.env);
 ////// start the server
 const port = process.env.PORT || 8000;
 

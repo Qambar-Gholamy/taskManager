@@ -22,7 +22,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
   });
-  createToken.createSendToken(newUser, 201, res);
+  createToken(newUser, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -35,10 +35,11 @@ exports.login = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email }).select('password');
 
   if (!user || !(await user.correctPassword(password, user.password))) {
+    console.log('password:', password, 'user.password: ', user.password);
     return next(new AppError('incorrect email or password!', 401));
   }
 
-  createToken.createSendToken(user, 200, res);
+  createToken(user, 200, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {

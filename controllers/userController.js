@@ -2,15 +2,18 @@ const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 const User = require('../models/userModel');
 
-exports.getAllUser = catchAsync(async (req, res, next) => {
-  const docs = await User.find(req.body);
+exports.getAllInterns = catchAsync(async (req, res, next) => {
+  docs = await User.find({ role: 'intern' });
 
-  // let docs;
-  // if (req.body.role === 'intern') {
-  //   docs = await User.find({ role: 'intern' });
-  // } else if (req.body.role === 'trainer') {
-  //   docs = await User.find({ role: 'trainer' });
-  // }
+  res.status(200).json({
+    status: 'success',
+    result: docs.length,
+    data: docs,
+  });
+});
+
+exports.getAllTrainers = catchAsync(async (req, res, next) => {
+  docs = await User.find({ role: 'trainer' });
 
   res.status(200).json({
     status: 'success',
@@ -20,17 +23,15 @@ exports.getAllUser = catchAsync(async (req, res, next) => {
 });
 
 exports.createUser = catchAsync(async (req, res, next) => {
-  const doc = await User.create(req.body);
-
-  // hello worl
+  const users = await User.create(req.body);
   res.status(201).json({
     status: 'success',
-    data: doc,
+    data: users,
   });
 });
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  let query = User.findById(req.params.id);
+  let query = await User.findById(req.params.id);
 
   if (req.body.role === 'intern')
     query = query.populate({
