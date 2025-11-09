@@ -1,8 +1,7 @@
-const { promisify } = require('util');
-const JWT = require('jsonwebtoken');
 const catchAsync = require('../utils/catchAsync');
+const bcrypt = require('bcryptjs');
 const AppError = require('../utils/AppError');
-const createToken = require('../utils/createToken');
+const { signToken } = require('../utils/signToken');
 const User = require('../models/userModel');
 
 exports.restrictTo =
@@ -16,64 +15,107 @@ exports.restrictTo =
 
 /// sign up and creating account
 exports.signup = catchAsync(async (req, res, next) => {
-  const newUser = await User.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
-  });
-  createToken(newUser, 201, res);
+  try {
+    const { name, email, password, passwordConfirm } = req.body;
+
+    // 1. Validate input
+    if (!name || !email || !password || !passwordConfirm) {
+      return res
+        .status(400)
+        .json({ message: 'Please provide all required fields' });
+    }
+
+    if (password !== passwordConfirm) {
+      return res.status(400).json({ message: 'Passwords do not match' });
+    }
+
+    // 2. Create new user
+    const newUser = await User.create({
+      name,
+      email,
+      password,
+      passwordConfirm, // optional, can be removed from schema later
+    });
+
+    // 3. Create token
+    const token = signToken(newUser);
+
+    // 4. Send response
+    res.status(201).json({
+      status: 'success',
+      token,
+      data: {
+        user: newUser,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  if (!email || !password) {
-    return next(new AppError('please enter an email and password', 400));
+    // 1. Check if email and password exist
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: 'Please provide email and password' });
+    }
+
+    // 2. Check if user exists and password is correct
+    const user = await User.findOne({ email }).select('+password');
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ message: 'Incorrect email or password' });
+    }
+
+    // 3. Create token
+    const token = signToken(user);
+
+    // 4. Send token
+    res.status(200).json({
+      status: 'success',
+      token,
+      data: { user },
+    });
+  } catch (err) {
+    next(err);
   }
-
-  const user = await User.findOne({ email }).select('password');
-
-  if (!user || !(await user.correctPassword(password, user.password))) {
-    console.log('password:', password, 'user.password: ', user.password);
-    return next(new AppError('incorrect email or password!', 401));
-  }
-
-  createToken(user, 200, res);
 });
 
-exports.protect = catchAsync(async (req, res, next) => {
-  /// getting token and check if it is there
-  let token;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
-  ) {
-    token = req.headers.authorization.split(' ')[1];
-  }
+// exports.protect = catchAsync(async (req, res, next) => {
+//   /// getting token and check if it is there
+//   let token;
+//   if (
+//     req.headers.authorization &&
+//     req.headers.authorization.startsWith('Bearer')
+//   ) {
+//     token = req.headers.authorization.split(' ')[1];
+//   }
 
-  if (!token) {
-    return next(
-      new AppError('you are not logged in please log in to get accessed!', 401),
-    );
-  }
+//   if (!token) {
+//     return next(
+//       new AppError('you are not logged in please log in to get accessed!', 401),
+//     );
+//   }
 
-  /// verifiction of the token
-  const decoded = await promisify(JWT.verify)(token, process.env.JWT_SECRET);
+//   /// verifiction of the token
+//   const decoded = await promisify(JWT.verify)(token, process.env.JWT_SECRET);
 
-  /// check user exitence
-  const currentUser = await User.findById(decoded.id);
-  if (!currentUser) {
-    return next(
-      new AppError(
-        'the person that the token belongs to does no longer exist.',
-        401,
-      ),
-    );
-  }
+//   /// check user exitence
+//   const currentUser = await User.findById(decoded.id);
+//   if (!currentUser) {
+//     return next(
+//       new AppError(
+//         'the person that the token belongs to does no longer exist.',
+//         401,
+//       ),
+//     );
+//   }
 
-  /// grant access
-  req.user = currentUser;
+//   /// grant access
+//   req.user = currentUser;
 
-  next();
-});
+//   next();
+// });

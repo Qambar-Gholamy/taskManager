@@ -57,20 +57,9 @@ userSchema.virtual('reports', {
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
-
   this.password = await bcrypt.hash(this.password, 12);
-
-  this.passwordConfirm = undefined;
-
   next();
 });
-/////// FIXME
-userSchema.methods.correctPassword = async function (
-  condidatePassword,
-  userPassword,
-) {
-  return condidatePassword === userPassword;
-};
 
 const User = mongoose.model('User', userSchema);
 

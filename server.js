@@ -1,5 +1,5 @@
 const dotenv = require('dotenv').config({ path: './config.env' });
-
+const User = require('./models/userModel.js');
 const mongoose = require('mongoose');
 
 process.on('uncaughtException', (err) => {
@@ -21,7 +21,18 @@ mongoose.connect(process.env.DATABASE_LOCAL).then(() => {
   console.log('success!');
 });
 
-/// console.log(process.env);
+// const insertTrainers = async function () {
+//   const findTrainers = await User.find({ role: 'trainer' }).exec();
+//   console.log('findtrainer', findTrainers);
+
+//   if (findTrainers.length === 0) {
+//     const insertTrainers = require('./seeder.js');
+//     insertTrainers();
+//   }
+// };
+
+// insertTrainers();
+
 ////// start the server
 const port = process.env.PORT || 8000;
 
