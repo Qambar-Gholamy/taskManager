@@ -83,39 +83,3 @@ exports.login = catchAsync(async (req, res, next) => {
     next(err);
   }
 });
-
-// exports.protect = catchAsync(async (req, res, next) => {
-//   /// getting token and check if it is there
-//   let token;
-//   if (
-//     req.headers.authorization &&
-//     req.headers.authorization.startsWith('Bearer')
-//   ) {
-//     token = req.headers.authorization.split(' ')[1];
-//   }
-
-//   if (!token) {
-//     return next(
-//       new AppError('you are not logged in please log in to get accessed!', 401),
-//     );
-//   }
-
-//   /// verifiction of the token
-//   const decoded = await promisify(JWT.verify)(token, process.env.JWT_SECRET);
-
-//   /// check user exitence
-//   const currentUser = await User.findById(decoded.id);
-//   if (!currentUser) {
-//     return next(
-//       new AppError(
-//         'the person that the token belongs to does no longer exist.',
-//         401,
-//       ),
-//     );
-//   }
-
-//   /// grant access
-//   req.user = currentUser;
-
-//   next();
-// });
