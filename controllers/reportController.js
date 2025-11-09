@@ -16,6 +16,7 @@ exports.getAllReports = catchAsync(async (req, res) => {
 });
 
 exports.getReportsByDate = catchAsync(async (req, res, next) => {
+  console.log(rq.query);
   const { date } = req.query;
 
   if (!date) {
