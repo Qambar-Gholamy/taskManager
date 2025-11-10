@@ -8,11 +8,12 @@ Router.use(authMiddleware);
 
 Router.route('/')
   .get(reportController.getAllReports)
-  .get(reportController.getReportsByDate)
   .post(reportController.createReport);
 
+Router.get('/search', reportController.searchReports);
+
 Router.route('/:id')
-  .patch(reportController.updateReport)
   .get(reportController.getReport)
+  .patch(reportController.updateReport)
   .delete(reportController.deleteReport);
 module.exports = Router;

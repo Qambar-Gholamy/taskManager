@@ -1,10 +1,18 @@
 const Report = require('../models/reportModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
+const mongoose = require('mongoose');
 
 exports.getAllReports = catchAsync(async (req, res) => {
+  const { date } = req.query;
+
   let filter = {};
-  if (req.params.internId) filter = { intern: req.params.internId };
+  if (date) {
+    const selectedDate = new Date(date);
+    const start = new Date(selectedDate.setHours(0, 0, 0, 0));
+    const end = new Date(selectedDate.setHours(23, 59, 59, 999));
+    filter.date = { $gte: start, $lte: end };
+  }
 
   const reports = await Report.find(filter);
 
@@ -15,35 +23,35 @@ exports.getAllReports = catchAsync(async (req, res) => {
   });
 });
 
-exports.getReportsByDate = catchAsync(async (req, res, next) => {
-  console.log(rq.query);
-  const { date } = req.query;
+exports.searchReports = catchAsync(async (req, res, next) => {
+  // Get the search query from frontend (e.g., ?q=searchText)
+  const { q } = req.query;
 
-  if (!date) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Please provide a date in the query, e.g. ?date=2025-01-12',
-    });
+  if (!q) {
+    return next(new AppError('Please provide a search query', 400));
   }
 
-  // Parse and normalize the date
-  const selectedDate = new Date(date);
+  // Build regex for case-insensitive partial match
+  const searchRegex = new RegExp(q, 'i');
 
-  if (isNaN(selectedDate)) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Invalid date format. Please use YYYY-MM-DD format.',
-    });
-  }
-
-  // Define start and end of that day
-  const startOfDay = new Date(selectedDate.setHours(0, 0, 0, 0));
-  const endOfDay = new Date(selectedDate.setHours(23, 59, 59, 999));
-
-  // Fetch reports within that date range
+  // Search across multiple fields
   const reports = await Report.find({
-    date: { $gte: startOfDay, $lte: endOfDay },
+    $or: [
+      { email: searchRegex },
+      { stack: searchRegex },
+      { task: searchRegex },
+      { report: searchRegex },
+      { signIn: searchRegex },
+      { signOut: searchRegex },
+    ],
   });
+
+  const search = req.query.search;
+  let query = [];
+
+  if (mongoose.Types.ObjectId.isValid(search)) {
+    query.push({ user: search });
+  }
 
   res.status(200).json({
     status: 'success',

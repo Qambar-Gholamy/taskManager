@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const reportSchema = mongoose.Schema(
   {
-    Date: {
+    date: {
       type: mongoose.SchemaTypes.Date,
       default: Date.now,
       get: (val) => val.toISOString().split('T')[0],

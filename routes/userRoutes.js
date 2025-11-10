@@ -10,7 +10,7 @@ Router.route('/signup').post(authController.signup);
 Router.post('/login', authController.login);
 
 Router.use(authMiddleware);
-Router.use('/:UserId/reports', reportRoutes);
+// Router.use('/:UserId/reports', reportRoutes);
 Router.route('/').post(userController.createUser);
 Router.route('/interns').get(userController.getAllInterns);
 Router.route('/trainers').get(userController.getAllTrainers);
