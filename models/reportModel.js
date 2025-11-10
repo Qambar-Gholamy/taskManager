@@ -19,16 +19,17 @@ const reportSchema = mongoose.Schema(
       trim: true,
       // required: [true, 'A task should have a description'],
     },
-    user: {
+
+    intern: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
-      required: [true, 'A task should have a user id'],
     },
-    // trainer: {
-    //   type: mongoose.Schema.ObjectId,
-    //   ref: 'Report',
-    //   required: [true, 'please enter the name of the mentor'],
-    // },
+    trainer: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+      match: { role: 'trainer' },
+      // required: [true, 'A task should have a user id'],
+    },
     signIn: {
       type: String,
       required: [true, 'Please provide the time (hour and minute)'],
@@ -54,10 +55,11 @@ const reportSchema = mongoose.Schema(
     toObject: { getters: true },
   },
 );
-// Auto populate intern name and stack
+
 reportSchema.pre(/^find/, function (next) {
   this.populate({
-    path: 'user',
+    path: 'intern',
+    match: { role: 'intern' },
     select: 'name stack',
   });
   next();

@@ -38,6 +38,7 @@ exports.searchReports = catchAsync(async (req, res, next) => {
   const reports = await Report.find({
     $or: [
       { email: searchRegex },
+      { user: searchRegex },
       { stack: searchRegex },
       { task: searchRegex },
       { report: searchRegex },
@@ -45,6 +46,11 @@ exports.searchReports = catchAsync(async (req, res, next) => {
       { signOut: searchRegex },
     ],
   });
+  // .populate({
+  //   path: 'user',
+  //   match: { name: { $regex: q }, role: 'intern' },
+  //   select: 'name email',
+  // });
 
   const search = req.query.search;
   let query = [];
