@@ -17,11 +17,13 @@ app.use(express.json());
 // app.use(express.json({ limit: '100kb' }));
 
 /* ------------------------------- 3) ROUTES ---------------------------------- */
+
+app.use('/taskManager/users', userRoutes);
+app.use('/taskManager/reports', reportRoutes);
 app.use('/', (req, res) => {
   res.json('runing the app is here');
 });
-app.use('/taskManager/users', userRoutes);
-app.use('/taskManager/reports', reportRoutes);
+
 /* --------------------------- 4) 404 HANDLER --------------------------------- */
 app.all(/.*/, (req, res, next) => {
   const message = 'Resource not found!';
