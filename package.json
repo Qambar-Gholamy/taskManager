@@ -5,9 +5,7 @@
   "license": "ISC",
   "author": "Qanbar",
   "scripts": {
-    "start": "nodemon server.js",
-    "build": "npm vite",
-    "debug": "ndb server.js"
+    "start": "nodemon server.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
