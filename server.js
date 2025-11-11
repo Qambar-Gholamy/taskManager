@@ -34,7 +34,7 @@ mongoose.connect(DB).then(() => {
 // insertTrainers();
 
 ////// start the server
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 
 const server = app.listen(port, () => {
   // eslint-disable-next-line no-console
