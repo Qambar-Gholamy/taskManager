@@ -16,7 +16,7 @@ exports.restrictTo =
 /// sign up and creating account
 exports.signup = catchAsync(async (req, res, next) => {
   try {
-    const { name, email, password, passwordConfirm } = req.body;
+    const { name, email, password, passwordConfirm, role } = req.body;
 
     // 1. Validate input
     if (!name || !email || !password || !passwordConfirm) {
@@ -34,7 +34,8 @@ exports.signup = catchAsync(async (req, res, next) => {
       name,
       email,
       password,
-      passwordConfirm, // optional, can be removed from schema later
+      passwordConfirm,
+      role, // optional, can be removed from schema later
     });
 
     // 3. Create token

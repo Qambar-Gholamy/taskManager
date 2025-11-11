@@ -33,7 +33,7 @@ exports.createUser = catchAsync(async (req, res, next) => {
 exports.getUser = catchAsync(async (req, res, next) => {
   let query = await User.findById(req.params.id);
 
-  if (req.body.role === 'intern')
+  if (req.params.role === 'intern')
     query = query.populate({
       path: 'reports',
       select: '-intern',
