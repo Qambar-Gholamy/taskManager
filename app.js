@@ -17,6 +17,9 @@ app.use(express.json());
 // app.use(express.json({ limit: '100kb' }));
 
 /* ------------------------------- 3) ROUTES ---------------------------------- */
+app.use('/', (req, res) => {
+  res.json('runing the app is here');
+});
 app.use('/taskManager/users', userRoutes);
 app.use('/taskManager/reports', reportRoutes);
 /* --------------------------- 4) 404 HANDLER --------------------------------- */
