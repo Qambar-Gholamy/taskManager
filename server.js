@@ -9,14 +9,15 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-const app = require('./app.js');
-
 const DB = process.env.DATABASE;
+const port = process.env.PORT || 8000;
 
 // mongoose.connect(process.env.DATABASE_LOCAL).then(() => {
 mongoose.connect(DB).then(() => {
   console.log('success!');
 });
+
+const app = require('./app.js');
 
 // const insertTrainers = async function () {
 //   const findTrainers = await User.find({ role: 'trainer' }).exec();
@@ -31,7 +32,6 @@ mongoose.connect(DB).then(() => {
 // insertTrainers();
 
 ////// start the server
-const port = process.env.PORT || 8000;
 
 const server = app.listen(port, () => {
   // eslint-disable-next-line no-console
