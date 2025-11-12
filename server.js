@@ -1,13 +1,7 @@
-const dotenv = require('dotenv').config({ path: '.env' });
-const User = require('./models/userModel.js');
+const dotenv = require('dotenv');
+dotenv.config({ path: './.env' });
+// const User = require('./models/userModel.js');
 const mongoose = require('mongoose');
-
-process.on('uncaughtException', (err) => {
-  console.error('💥 UNHANDLED EXCEPTION! Shutting down...');
-  console.error(err.name, err.message);
-  console.log(err);
-  process.exit(1);
-});
 
 const DB = process.env.DATABASE;
 const port = process.env.PORT || 8000;
@@ -15,6 +9,13 @@ const port = process.env.PORT || 8000;
 // mongoose.connect(process.env.DATABASE_LOCAL).then(() => {
 mongoose.connect(DB).then(() => {
   console.log('success!');
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('💥 UNHANDLED EXCEPTION! Shutting down...');
+  console.error(err.name, err.message);
+  console.log(err);
+  process.exit(1);
 });
 
 const app = require('./app.js');
