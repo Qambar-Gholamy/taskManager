@@ -20,9 +20,10 @@ app.use(express.json());
 
 app.use('/taskManager/users', userRoutes);
 app.use('/taskManager/reports', reportRoutes);
-app.use('/', (req, res) => {
-  res.json('runing the app is here');
-});
+// app.use('/', (req, res, next) => {
+//   res.json('runing the app is here');
+//   next();
+// });
 
 /* --------------------------- 4) 404 HANDLER --------------------------------- */
 app.all(/.*/, (req, res, next) => {
