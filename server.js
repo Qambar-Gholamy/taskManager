@@ -7,9 +7,14 @@ const DB = process.env.DATABASE;
 const port = process.env.PORT || 8000;
 
 // mongoose.connect(process.env.DATABASE_LOCAL).then(() => {
-mongoose.connect(DB).then(() => {
-  console.log('success!');
-});
+mongoose
+  .connect(DB)
+  .then(() => {
+    console.log('success!');
+  })
+  .catch((reason) => {
+    console.log('reason', reason);
+  });
 
 process.on('uncaughtException', (err) => {
   console.error('💥 UNHANDLED EXCEPTION! Shutting down...');
