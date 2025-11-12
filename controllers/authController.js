@@ -81,6 +81,8 @@ exports.login = catchAsync(async (req, res, next) => {
       data: { user },
     });
   } catch (err) {
+    console.log('error is showing here', err);
+
     next(err);
   }
 });
