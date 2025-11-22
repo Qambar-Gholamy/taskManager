@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const AppError = require('../utils/AppError');
 const { signToken } = require('../utils/signToken');
 const User = require('../models/userModel');
+const { Error } = require('mongoose');
 
 exports.restrictTo =
   (...roles) =>
@@ -29,13 +30,24 @@ exports.signup = catchAsync(async (req, res, next) => {
   }
 
   // 2. Create new user
-  const newUser = await User.create({
-    name,
-    email,
-    password,
-    passwordConfirm,
-    role, // optional, can be removed from schema later
-  });
+  let newUser;
+
+  try {
+    newUser = await User.create({
+      name,
+      email,
+      password,
+      passwordConfirm,
+      role,
+    });
+  } catch (err) {
+    if (err.code === 11000) {
+      return res.status(400).json({
+        message: 'Email already exists',
+      });
+    }
+    throw err; // let catchAsync handle other errors
+  }
 
   // 3. Create token
   const token = signToken(newUser);
