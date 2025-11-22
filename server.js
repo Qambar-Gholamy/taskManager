@@ -8,10 +8,7 @@ const port = process.env.PORT || 8000;
 
 // mongoose.connect(process.env.DATABASE_LOCAL).then(() => {
 mongoose
-  .connect(DB, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(DB)
   .then(() => {
     console.log('success!');
   })
