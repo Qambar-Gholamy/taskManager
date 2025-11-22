@@ -5,6 +5,16 @@ const reportRoutes = require('./routes/reportRoutes');
 const app = express();
 
 app.use(express.json());
+
+const cors = require('cors');
+app.use(
+  cors({
+    origin: '*',
+    methods: 'GET,POST,PUT,DELETE',
+    allowedHeaders: 'Content-Type, Authorization',
+  }),
+);
+
 // /* ---------------------- 1) RATE LIMITING (before routes) --------------------- */
 // const limiter = rateLimit({
 //   max: 100,
