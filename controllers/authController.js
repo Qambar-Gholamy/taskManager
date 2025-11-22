@@ -15,43 +15,39 @@ exports.restrictTo =
 
 /// sign up and creating account
 exports.signup = catchAsync(async (req, res, next) => {
-  try {
-    const { name, email, password, passwordConfirm, role } = req.body;
+  const { name, email, password, passwordConfirm, role } = req.body;
 
-    // 1. Validate input
-    if (!name || !email || !password || !passwordConfirm) {
-      return res
-        .status(400)
-        .json({ message: 'Please provide all required fields' });
-    }
-
-    if (password !== passwordConfirm) {
-      return res.status(400).json({ message: 'Passwords do not match' });
-    }
-
-    // 2. Create new user
-    const newUser = await User.create({
-      name,
-      email,
-      password,
-      passwordConfirm,
-      role, // optional, can be removed from schema later
-    });
-
-    // 3. Create token
-    const token = signToken(newUser);
-
-    // 4. Send response
-    res.status(201).json({
-      status: 'success',
-      token,
-      data: {
-        user: newUser,
-      },
-    });
-  } catch (err) {
-    next(err);
+  // 1. Validate input
+  if (!name || !email || !password || !passwordConfirm) {
+    return res
+      .status(400)
+      .json({ message: 'Please provide all required fields' });
   }
+
+  if (password !== passwordConfirm) {
+    return res.status(400).json({ message: 'Passwords do not match' });
+  }
+
+  // 2. Create new user
+  const newUser = await User.create({
+    name,
+    email,
+    password,
+    passwordConfirm,
+    role, // optional, can be removed from schema later
+  });
+
+  // 3. Create token
+  const token = signToken(newUser);
+
+  // 4. Send response
+  res.status(201).json({
+    status: 'success',
+    token,
+    data: {
+      user: newUser,
+    },
+  });
 });
 
 exports.login = catchAsync(async (req, res, next) => {

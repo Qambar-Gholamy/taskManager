@@ -38,6 +38,16 @@ const userSchema = new mongoose.Schema({
     minlength: 8,
     select: false,
   },
+  passwordConfirm: {
+    type: String,
+    required: [true, 'please confirm your password.'],
+    validate: {
+      validator: function (el) {
+        return el === this.password;
+      },
+      messagge: 'Password should be the same.',
+    },
+  },
   role: {
     type: String,
     enum: ['intern', 'trainer'],
