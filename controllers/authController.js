@@ -16,11 +16,10 @@ exports.restrictTo =
 
 /// sign up and creating account
 exports.signup = catchAsync(async (req, res, next) => {
-  const { name, email, password, passwordConfirm, profilePhoto, role } =
-    req.body;
+  const { name, email, password, passwordConfirm, role } = req.body;
 
   // 1. Validate input
-  if (!name || !email || !password || !passwordConfirm || !profilePhoto) {
+  if (!name || !email || !password || !passwordConfirm) {
     return res
       .status(400)
       .json({ message: 'Please provide all required fields' });
@@ -38,7 +37,6 @@ exports.signup = catchAsync(async (req, res, next) => {
       name,
       email,
       password,
-      profilePhoto,
       role,
     });
   } catch (err) {
