@@ -16,10 +16,11 @@ exports.restrictTo =
 
 /// sign up and creating account
 exports.signup = catchAsync(async (req, res, next) => {
-  const { name, email, password, passwordConfirm, role } = req.body;
+  const { name, email, password, passwordConfirm, profilePhoto, role } =
+    req.body;
 
   // 1. Validate input
-  if (!name || !email || !password || !passwordConfirm) {
+  if (!name || !email || !password || !passwordConfirm || !profilePhoto) {
     return res
       .status(400)
       .json({ message: 'Please provide all required fields' });
@@ -37,13 +38,13 @@ exports.signup = catchAsync(async (req, res, next) => {
       name,
       email,
       password,
-      passwordConfirm,
+      profilePhoto,
       role,
     });
   } catch (err) {
     if (err.code === 11000) {
       return res.status(400).json({
-        message: '📧 Email already exists',
+        message: 'Email already exists',
       });
     }
     throw err; // let catchAsync handle other errors
