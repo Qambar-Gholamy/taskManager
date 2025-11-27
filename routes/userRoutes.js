@@ -6,7 +6,12 @@ const authMiddleware = require('../utils/authMiddleware');
 
 const Router = express.Router();
 
-Router.route('/signup').post(authController.signup);
+Router.post(
+  '/signup',
+  userController.uploadImage,
+  userController.resizePhoto,
+  authController.signup,
+);
 Router.post('/login', authController.login);
 
 Router.use(authMiddleware);

@@ -8,7 +8,7 @@ const { Error } = require('mongoose');
 exports.restrictTo =
   (...roles) =>
   (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
+    if (!roles.includes(req.body.role)) {
       next(new AppError('you don not have the permission', 403));
     }
     next();
@@ -25,18 +25,15 @@ exports.signup = catchAsync(async (req, res, next) => {
       .json({ message: 'Please provide all required fields' });
   }
 
-  if (password !== passwordConfirm) {
-    return res.status(400).json({ message: 'Passwords do not match' });
-  }
-
-  // 2. Create new user
-  let newUser;
+  const profilePhoto = req.file ? req.file.filename : null;
 
   try {
     newUser = await User.create({
       name,
       email,
       password,
+      passwordConfirm,
+      profilePhoto,
       role,
     });
   } catch (err) {
@@ -45,9 +42,8 @@ exports.signup = catchAsync(async (req, res, next) => {
         message: 'Email already exists',
       });
     }
-    throw err; // let catchAsync handle other errors
+    throw err;
   }
-
   // 3. Create token
   const token = signToken(newUser);
 

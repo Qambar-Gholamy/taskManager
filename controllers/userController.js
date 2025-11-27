@@ -1,6 +1,24 @@
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 const User = require('../models/userModel');
+const sharp = require('sharp');
+const { upload } = require('../utils/multerUpload');
+
+// FIXME
+exports.uploadImage = upload.single('profilePhoto');
+
+exports.resizePhoto = catchAsync(async (req, res, next) => {
+  if (!req.file) return next();
+
+  req.file.filename = `user-${req.body.name}-${new Date().toISOString().split('T')[0]}.jpeg`;
+  await sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(`public/imgs/${req.file.filename}`);
+
+  next();
+});
 
 exports.getAllInterns = catchAsync(async (req, res, next) => {
   docs = await User.find({ role: 'intern' });
