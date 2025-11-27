@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
         'stack are either Front-end Developer,Full-stack Developer, Back-end Developer, UX UI designer, Mobile, and Media',
     },
   },
-  profilePhoto: { type: String, default: 'default.jpeg' },
+  profilePhoto: String,
   password: {
     type: String,
     required: [true, 'please enter your password'],

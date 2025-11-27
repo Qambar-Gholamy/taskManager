@@ -25,7 +25,9 @@ exports.signup = catchAsync(async (req, res, next) => {
       .json({ message: 'Please provide all required fields' });
   }
 
-  const profilePhoto = req.file ? req.file.filename : null;
+  const profilePhoto = req.file
+    ? req.file.filename
+    : `/public/imgs/default.jpeg`;
 
   try {
     newUser = await User.create({
