@@ -19,7 +19,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   const { name, email, password, passwordConfirm, role } = req.body;
 
   // 1. Validate input
-  if (!name || !email || !password || !passwordConfirm) {
+  if (!stack !name || !email || !password || !passwordConfirm) {
     return res
       .status(400)
       .json({ message: 'Please provide all required fields' });
@@ -36,6 +36,7 @@ exports.signup = catchAsync(async (req, res, next) => {
       password,
       passwordConfirm,
       profilePhoto,
+      stack,
       role,
     });
   } catch (err) {

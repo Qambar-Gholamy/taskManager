@@ -4,7 +4,6 @@ const User = require('../models/userModel');
 const sharp = require('sharp');
 const { upload } = require('../utils/multerUpload');
 
-// FIXME
 exports.uploadImage = upload.single('profilePhoto');
 
 exports.resizePhoto = catchAsync(async (req, res, next) => {
