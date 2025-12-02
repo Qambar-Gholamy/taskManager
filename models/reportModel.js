@@ -37,7 +37,7 @@ const reportSchema = mongoose.Schema(
       trim: true,
       // optional regex validation
       match: [
-        /^([0-1]?[0-2]):[0-5][0-9](\s?(AM|PM|am|pm))?$/,
+        /^(0?[1-9]|1[0-2]):([0-5][0-9])(\s?(AM|PM|am|pm))?$/,
         'Please enter a valid time format (e.g., 2:30 PM)',
       ],
     },
@@ -46,7 +46,7 @@ const reportSchema = mongoose.Schema(
       required: [true, 'Please provide the time (hour and minute)'],
       trim: true,
       match: [
-        /^([0-1]?[0-2]):[0-5][0-9](\s?(AM|PM|am|pm))?$/,
+        /^(0?[1-9]|1[0-2]):([0-5][0-9])(\s?(AM|PM|am|pm))?$/,
         'Please enter a valid time format (e.g., 2:30 PM)',
       ],
     },
