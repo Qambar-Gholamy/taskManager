@@ -24,6 +24,7 @@ const reportSchema = mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'User',
     },
+    ///FIXME
     trainer: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',

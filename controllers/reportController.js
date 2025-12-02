@@ -70,6 +70,7 @@ exports.searchReports = catchAsync(async (req, res, next) => {
 
 exports.createReport = catchAsync(async (req, res) => {
   const reports = await Report.create(req.body);
+  console.log('log report of the request', reports);
 
   res.status(200).json({
     status: 'success',
