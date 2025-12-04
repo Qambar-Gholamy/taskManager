@@ -35,6 +35,8 @@ exports.myReports = catchAsync(async (req, res, next) => {
     filter.date = { $gte: start, $lte: end };
   }
 
+  console.log(filter);
+
   const reports = await Report.find(filter).populate('trainer', 'name');
 
   res.status(200).json({
@@ -46,27 +48,48 @@ exports.myReports = catchAsync(async (req, res, next) => {
 
 exports.searchReports = catchAsync(async (req, res, next) => {
   // Get the search query from frontend (e.g., ?q=searchText)
-  const { q } = req.query;
+  const { s } = req.query;
 
-  if (!q) {
+  if (!s) {
     return next(new AppError('Please provide a search query', 400));
   }
 
-  // Build regex for case-insensitive partial match
-  const searchRegex = new RegExp(q, 'i');
+  const searchRegex = new RegExp(s, 'i');
 
-  //// FIXME
-  // Search across multiple fields
-  const reports = await Report.find({
-    $or: [
-      { intern: mongoose.Types.ObjectId(searchString) },
-      { stack: searchRegex },
-      { task: searchRegex },
-      { report: searchRegex },
-      { signIn: searchRegex },
-      { signOut: searchRegex },
-    ],
-  });
+  const reports = await Report.aggregate([
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'intern',
+        foreignField: '_id',
+        as: 'intern',
+      },
+    },
+    { $unwind: '$intern' },
+    {
+      $match: {
+        $or: [
+          { 'intern.name': searchRegex },
+          { stack: searchRegex },
+          { task: searchRegex },
+          { report: searchRegex },
+          { signIn: searchRegex },
+          { signOut: searchRegex },
+        ],
+      },
+    },
+    {
+      $project: {
+        intern: '$intern.name',
+        stack: 1,
+        task: 1,
+        report: 1,
+        signIn: 1,
+        signOut: 1,
+        date: 1,
+      },
+    },
+  ]);
 
   const search = req.query.search;
   let query = [];
