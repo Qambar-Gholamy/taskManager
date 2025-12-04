@@ -47,6 +47,7 @@ const userSchema = new mongoose.Schema({
       },
       messagge: 'Password should be the same.',
     },
+    select: false,
   },
   role: {
     type: String,

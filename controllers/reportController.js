@@ -2,6 +2,7 @@ const Report = require('../models/reportModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 
 exports.getAllReports = catchAsync(async (req, res) => {
   const { date } = req.query;
@@ -14,7 +15,27 @@ exports.getAllReports = catchAsync(async (req, res) => {
     filter.date = { $gte: start, $lte: end };
   }
 
-  const reports = await Report.find(filter);
+  const reports = await Report.find(filter).populate('trainer', 'name');
+
+  res.status(200).json({
+    status: 'success',
+    results: reports.length,
+    data: { reports },
+  });
+});
+
+exports.myReports = catchAsync(async (req, res, next) => {
+  const { date } = req.query;
+
+  let filter = { intern: req.intern.id };
+  if (date) {
+    const selectedDate = new Date(date);
+    const start = new Date(selectedDate.setHours(0, 0, 0, 0));
+    const end = new Date(selectedDate.setHours(23, 59, 59, 999));
+    filter.date = { $gte: start, $lte: end };
+  }
+
+  const reports = await Report.find(filter).populate('trainer', 'name');
 
   res.status(200).json({
     status: 'success',
@@ -34,11 +55,11 @@ exports.searchReports = catchAsync(async (req, res, next) => {
   // Build regex for case-insensitive partial match
   const searchRegex = new RegExp(q, 'i');
 
+  //// FIXME
   // Search across multiple fields
   const reports = await Report.find({
     $or: [
-      { email: searchRegex },
-      { user: searchRegex },
+      { intern: mongoose.Types.ObjectId(searchString) },
       { stack: searchRegex },
       { task: searchRegex },
       { report: searchRegex },
@@ -46,11 +67,6 @@ exports.searchReports = catchAsync(async (req, res, next) => {
       { signOut: searchRegex },
     ],
   });
-  // .populate({
-  //   path: 'user',
-  //   match: { name: { $regex: q }, role: 'intern' },
-  //   select: 'name email',
-  // });
 
   const search = req.query.search;
   let query = [];
@@ -69,6 +85,8 @@ exports.searchReports = catchAsync(async (req, res, next) => {
 });
 
 exports.createReport = catchAsync(async (req, res) => {
+  const internId = req.intern.id;
+  req.body.intern = internId;
   const reports = await Report.create(req.body);
 
   res.status(200).json({

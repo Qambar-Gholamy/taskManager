@@ -23,13 +23,13 @@ const reportSchema = mongoose.Schema(
     intern: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
+      match: { role: 'intern' },
     },
     ///FIXME
     trainer: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
       match: { role: 'trainer' },
-      // required: [true, 'A task should have a user id'],
     },
     signIn: {
       type: String,

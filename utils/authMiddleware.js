@@ -26,7 +26,7 @@ module.exports = async function authMiddleware(req, res, next) {
     }
 
     // 4. Grant access
-    req.user = currentUser;
+    req.intern = currentUser;
     next();
   } catch (err) {
     res.status(401).json({ message: 'Invalid or expired token' });
