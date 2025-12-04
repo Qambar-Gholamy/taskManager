@@ -86,7 +86,6 @@ exports.searchReports = catchAsync(async (req, res, next) => {
         report: 1,
         signIn: 1,
         signOut: 1,
-        date: 1,
       },
     },
   ]);
