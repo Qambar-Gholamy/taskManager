@@ -65,6 +65,9 @@ exports.getAllReports = catchAsync(async (req, res, next) => {
         ],
       },
     },
+
+    { $sort: { date: -1 } },
+
     // // Pagination
     // { $skip: skip },
     // { $limit: limit },

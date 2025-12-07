@@ -17,27 +17,9 @@ app.use(
   }),
 );
 
-// /* ---------------------- 1) RATE LIMITING (before routes) --------------------- */
-// const limiter = rateLimit({
-//   max: 100,
-//   windowMs: 60 * 60 * 1000,
-//   message: 'Too many requests, please try again after an hour',
-// });
-// app.use('/taskManager', limiter);
-
-// /* ---------------------- 2) BODY PARSER (after security) ---------------------- */
-// app.use(express.json({ limit: '100kb' }));
-
-/* ------------------------------- 3) ROUTES ---------------------------------- */
-
 app.use('/taskManager/users', userRoutes);
 app.use('/taskManager/reports', reportRoutes);
-// app.use('/', (req, res, next) => {
-//   res.json('runing the app is here');
-//   next();
-// });
 
-/* --------------------------- 4) 404 HANDLER --------------------------------- */
 app.all(/.*/, (req, res, next) => {
   const message = 'Resource not found!';
   console.log(message);
