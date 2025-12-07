@@ -57,14 +57,14 @@ const reportSchema = mongoose.Schema(
   },
 );
 
-reportSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'intern',
-    match: { role: 'intern' },
-    select: 'name stack',
-  });
-  next();
-});
+// reportSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'intern',
+//     match: { role: 'intern' },
+//     select: 'name stack',
+//   });
+//   next();
+// });
 
 const Report = mongoose.model('Report', reportSchema);
 
