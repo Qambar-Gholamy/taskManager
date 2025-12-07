@@ -5,19 +5,27 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 
 exports.getAllReports = catchAsync(async (req, res, next) => {
-  /// for pagination
-  const { date } = req.query;
-  // const page = parseInt(req.query?.page) || 1;
-  // const limit = parseInt(req.query?.limit) || 10;
-  // const skip = (page - 1) * limit;
+  // for pagination
+  const page = parseInt(req.query?.page) || 1;
+  const limit = parseInt(req.query?.limit) || 20;
+  const skip = (page - 1) * limit;
+  // let total = 0;
 
+  const { date } = req.query;
+  let selectedDate;
   let filter = {};
+
   if (date) {
-    const selectedDate = new Date(date);
-    const start = new Date(selectedDate.setHours(0, 0, 0, 0));
-    const end = new Date(selectedDate.setHours(23, 59, 59, 999));
-    filter.date = { $gte: start, $lte: end };
+    selectedDate = new Date(date);
+  } else {
+    selectedDate = new Date(); // today
   }
+
+  const start = new Date(selectedDate);
+  start.setHours(0, 0, 0, 0);
+  const end = new Date(selectedDate);
+  end.setHours(23, 59, 59, 999);
+  filter.date = { $gte: start, $lte: end };
 
   const s = (req.query.s || '').toString();
 
@@ -67,22 +75,18 @@ exports.getAllReports = catchAsync(async (req, res, next) => {
     },
 
     { $sort: { date: -1 } },
-
-    // // Pagination
-    // { $skip: skip },
-    // { $limit: limit },
+    // Pagination
+    { $skip: skip },
+    { $limit: limit },
   ]);
-
-  const total = reports[0]?.total || 0;
 
   res.status(200).json({
     status: 'success',
     results: reports.length,
     data: { reports },
-    // page,
-    // limit,
+    page,
+    limit,
     // total,
-    // pages: Math.ceil(total / limit),
   });
 });
 
