@@ -9,7 +9,7 @@ exports.uploadImage = upload.single('profilePhoto');
 exports.resizePhoto = catchAsync(async (req, res, next) => {
   if (!req.file) return next();
 
-  req.file.filename = `user-${req.body.name}-${new Date().toISOString().split('T')[0]}.jpeg`;
+  req.file.filename = `img-${parseInt(Math.random() * 1000000)}-${new Date().toISOString().split('T')[0]}.jpeg`;
   await sharp(req.file.buffer)
     .resize(500, 500)
     .toFormat('jpeg')

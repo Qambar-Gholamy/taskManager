@@ -3,8 +3,10 @@ const express = require('express');
 const userRoutes = require('./routes/userRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 const app = express();
+const path = require('path');
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public/imgs')));
 
 const cors = require('cors');
 app.use(
