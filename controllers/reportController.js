@@ -138,10 +138,11 @@ exports.getReport = catchAsync(async (req, res, next) => {
 });
 
 exports.updateReport = catchAsync(async (req, res, next) => {
+  req.body.intern = req.intern;
   const newReport = await Report.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
-  });
+  }).populate('trainer', 'name');
 
   if (!newReport) {
     return next(new AppError('no document found with this ID', 404));
