@@ -1,16 +1,14 @@
 const Report = require('../models/reportModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
-const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
 
 exports.getAllReports = catchAsync(async (req, res, next) => {
   // for pagination
   const page = parseInt(req.query?.page) || 1;
   const limit = parseInt(req.query?.limit) || 10;
   const skip = (page - 1) * limit;
-  // let total = 0;
 
+  // date filter
   const { date } = req.query;
   let selectedDate;
   let filter = {};
@@ -18,7 +16,7 @@ exports.getAllReports = catchAsync(async (req, res, next) => {
   if (date) {
     selectedDate = new Date(date);
   } else {
-    selectedDate = new Date(); // today
+    selectedDate = new Date();
   }
 
   const start = new Date(selectedDate);
@@ -49,7 +47,7 @@ exports.getAllReports = catchAsync(async (req, res, next) => {
         let: { trainerId: '$trainer' },
         pipeline: [
           { $match: { $expr: { $eq: ['$_id', '$$trainerId'] } } },
-          { $project: { name: 1 } }, // only name
+          { $project: { name: 1 } },
         ],
         as: 'trainer',
       },
@@ -76,18 +74,13 @@ exports.getAllReports = catchAsync(async (req, res, next) => {
 
     {
       $facet: {
-        reports: [
-          // THIS IS NEW: rename 'data' → 'reports'
-          { $sort: { date: -1 } },
-          { $skip: skip },
-          { $limit: limit },
-        ],
+        reports: [{ $sort: { date: -1 } }, { $skip: skip }, { $limit: limit }],
         totalCount: [{ $count: 'count' }],
       },
     },
   ]);
 
-  reports = result[0].reports;
+  const reports = result[0].reports;
   const total = result[0].totalCount[0]?.count || 0;
 
   res.status(200).json({
