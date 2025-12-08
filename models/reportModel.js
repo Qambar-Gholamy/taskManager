@@ -25,7 +25,6 @@ const reportSchema = mongoose.Schema(
       ref: 'User',
       match: { role: 'intern' },
     },
-    ///FIXME
     trainer: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
@@ -57,14 +56,14 @@ const reportSchema = mongoose.Schema(
   },
 );
 
-// reportSchema.pre(/^find/, function (next) {
-//   this.populate({
-//     path: 'intern',
-//     match: { role: 'intern' },
-//     select: 'name stack',
-//   });
-//   next();
-// });
+reportSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'intern',
+    match: { role: 'intern' },
+    select: 'name stack profilePhoto',
+  });
+  next();
+});
 
 const Report = mongoose.model('Report', reportSchema);
 

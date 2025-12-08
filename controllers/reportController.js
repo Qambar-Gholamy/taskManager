@@ -34,7 +34,7 @@ exports.getAllReports = catchAsync(async (req, res, next) => {
         let: { internId: '$intern' },
         pipeline: [
           { $match: { $expr: { $eq: ['$_id', '$$internId'] } } },
-          { $project: { name: 1, stack: 1 } },
+          { $project: { name: 1, stack: 1, profilePhoto: 1 } },
         ],
         as: 'intern',
       },
@@ -61,8 +61,8 @@ exports.getAllReports = catchAsync(async (req, res, next) => {
         $or: [
           { 'intern.name': { $regex: s, $options: 'i' } },
           { 'intern.stack': { $regex: s, $options: 'i' } },
+          { 'intern.profilePhoto': { $regex: s, $options: 'i' } },
           { 'trainer.name': { $regex: s, $options: 'i' } },
-          { stack: { $regex: s, $options: 'i' } },
           { task: { $regex: s, $options: 'i' } },
           { report: { $regex: s, $options: 'i' } },
           { signIn: { $regex: s, $options: 'i' } },
@@ -103,8 +103,6 @@ exports.myReports = catchAsync(async (req, res, next) => {
     const end = new Date(selectedDate.setHours(23, 59, 59, 999));
     filter.date = { $gte: start, $lte: end };
   }
-
-  console.log(filter);
 
   const reports = await Report.find(filter).populate('trainer', 'name');
 
