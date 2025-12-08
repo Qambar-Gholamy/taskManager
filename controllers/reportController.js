@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 exports.getAllReports = catchAsync(async (req, res, next) => {
   // for pagination
   const page = parseInt(req.query?.page) || 1;
-  const limit = parseInt(req.query?.limit) || 20;
+  const limit = parseInt(req.query?.limit) || 10;
   const skip = (page - 1) * limit;
   // let total = 0;
 
@@ -29,7 +29,7 @@ exports.getAllReports = catchAsync(async (req, res, next) => {
 
   const s = (req.query.s || '').toString();
 
-  const reports = await Report.aggregate([
+  const result = await Report.aggregate([
     {
       $lookup: {
         from: 'users',
@@ -74,11 +74,21 @@ exports.getAllReports = catchAsync(async (req, res, next) => {
       },
     },
 
-    { $sort: { date: -1 } },
-    // Pagination
-    { $skip: skip },
-    { $limit: limit },
+    {
+      $facet: {
+        reports: [
+          // THIS IS NEW: rename 'data' → 'reports'
+          { $sort: { date: -1 } },
+          { $skip: skip },
+          { $limit: limit },
+        ],
+        totalCount: [{ $count: 'count' }],
+      },
+    },
   ]);
+
+  reports = result[0].reports;
+  const total = result[0].totalCount[0]?.count || 0;
 
   res.status(200).json({
     status: 'success',
@@ -86,7 +96,7 @@ exports.getAllReports = catchAsync(async (req, res, next) => {
     data: { reports },
     page,
     limit,
-    // total,
+    total,
   });
 });
 
