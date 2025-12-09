@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
         'Front-end Developer',
         'Back-end Developer',
         'Full-stack Developer',
-        'UX UI designer',
+        'UI/UX designer',
         'Mobile',
         'Media',
       ],
