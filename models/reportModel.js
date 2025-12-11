@@ -12,12 +12,10 @@ const reportSchema = mongoose.Schema(
       required: [true, 'please write the title of your task'],
       trim: true,
       maxlength: [100, 'Task title should hava maximum 100 characters'],
-      minlength: [10, 'Task title should have at least 5 characters'],
     },
     report: {
       type: String,
       trim: true,
-      // required: [true, 'A task should have a description'],
     },
 
     intern: {
