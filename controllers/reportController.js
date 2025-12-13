@@ -4,9 +4,9 @@ const catchAsync = require('../utils/catchAsync');
 
 exports.getAllReports = catchAsync(async (req, res, next) => {
   // for pagination
-  const page = parseInt(req.query?.page) || 1;
-  const limit = parseInt(req.query?.limit) || 10;
-  const skip = (page - 1) * limit;
+  // const page = parseInt(req.query?.page) || 1;
+  // const limit = parseInt(req.query?.limit) || 10;
+  // const skip = (page - 1) * limit;
 
   // date filter
   const { date } = req.query;
@@ -72,24 +72,24 @@ exports.getAllReports = catchAsync(async (req, res, next) => {
       },
     },
 
-    {
-      $facet: {
-        reports: [{ $sort: { date: -1 } }, { $skip: skip }, { $limit: limit }],
-        totalCount: [{ $count: 'count' }],
-      },
-    },
+    // {
+    //   $facet: {
+    //     reports: [{ $sort: { date: -1 } }, { $skip: skip }, { $limit: limit }],
+    //     totalCount: [{ $count: 'count' }],
+    //   },
+    // },
   ]);
 
-  const reports = result[0].reports;
-  const total = result[0].totalCount[0]?.count || 0;
+  // const reports = result[0].reports;
+  // const total = result[0].totalCount[0]?.count || 0;
 
   res.status(200).json({
     status: 'success',
-    results: reports.length,
-    data: { reports },
-    page,
-    limit,
-    total,
+    results: result.length,
+    data: { result },
+    // page,
+    // limit,
+    // total,
   });
 });
 
