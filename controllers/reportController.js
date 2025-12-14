@@ -55,6 +55,7 @@ exports.getAllReports = catchAsync(async (req, res, next) => {
     { $unwind: { path: '$trainer', preserveNullAndEmptyArrays: true } },
 
     { $match: filter },
+    { $sort: { date: -1 }},
 
     {
       $match: {
@@ -95,16 +96,17 @@ exports.getAllReports = catchAsync(async (req, res, next) => {
 
 exports.myReports = catchAsync(async (req, res, next) => {
   const { date } = req.query;
+   const dateSort = {date: -1  };
 
   let filter = { intern: req.intern.id };
   if (date) {
     const selectedDate = new Date(date);
     const start = new Date(selectedDate.setHours(0, 0, 0, 0));
     const end = new Date(selectedDate.setHours(23, 59, 59, 999));
-    filter.date = { $gte: start, $lte: end };
+    filter.date = { $gte: start, $lte: end};
   }
 
-  const reports = await Report.find(filter).populate('trainer', 'name');
+  const reports = await Report.find(filter).sort(dateSort).populate('trainer', 'name');
 
   res.status(200).json({
     status: 'success',
