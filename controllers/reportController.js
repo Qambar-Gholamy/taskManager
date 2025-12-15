@@ -97,7 +97,7 @@ exports.myReports = catchAsync(async (req, res, next) => {
   const { date } = req.query;
    const dateSort = {date: -1  };
 
-  let filter = { intern: req.user.id };
+  let filter = { intern: req.intern.id };
   if (date) {
     const selectedDate = new Date(date);
     const start = new Date(selectedDate.setHours(0, 0, 0, 0));
@@ -115,9 +115,8 @@ exports.myReports = catchAsync(async (req, res, next) => {
 });
 
 exports.createReport = catchAsync(async (req, res) => {
-  console.log('req.user is here',req.user);
-  const userId = req.user.id;
-  req.body.user = userId;
+  const internId = req.intern.id;
+  req.body.intern = internId;
   const reports = await Report.create(req.body);
 
   res.status(200).json({

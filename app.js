@@ -6,7 +6,7 @@ const app = express();
 const path = require('path');
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'images')));
+app.use(express.static(path.join(__dirname, 'public/imgs')));
 
 const cors = require('cors');
 app.use(
