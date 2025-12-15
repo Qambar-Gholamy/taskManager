@@ -47,6 +47,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     }
     throw err;
   }
+
   // 3. Create token
   const token = signToken(newUser);
 
@@ -62,20 +63,21 @@ exports.signup = catchAsync(async (req, res, next) => {
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-
+  
   // 1. Check if email and password exist
   if (!email || !password) {
     return res
-      .status(400)
-      .json({ message: 'Please provide email and password' });
+    .status(400)
+    .json({ message: 'Please provide email and password' });
   }
-
+  
   // 2. Check if user exists and password is correct
   const user = await User.findOne({ email }).select('+password');
+ 
   if (!user || !(await bcrypt.compare(password, user.password))) {
     return res.status(401).json({ message: 'Incorrect email or password' });
   }
-
+  
   // 3. Create token
   const token = signToken(user);
 
