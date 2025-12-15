@@ -27,7 +27,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   const profilePhoto = req.file
     ? req.file.filename
-    : `/public/imgs/default.jpeg`;
+    : `/images/default.jpeg`;
 
   try {
     newUser = await User.create({
