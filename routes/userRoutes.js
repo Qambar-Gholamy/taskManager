@@ -22,6 +22,6 @@ Router.route('/trainers').get(userController.getAllTrainers);
 Router.route('/:id')
   .get(userController.getUser)
   .patch(userController.updateUser)
-  .delete(authController.restrictTo('trainer'), userController.deleteUser);
+  .delete( userController.deleteUser);
 
 module.exports = Router;

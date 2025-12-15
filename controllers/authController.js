@@ -5,21 +5,12 @@ const { signToken } = require('../utils/signToken');
 const User = require('../models/userModel');
 const { Error } = require('mongoose');
 
-exports.restrictTo =
-  (...roles) =>
-  (req, res, next) => {
-    if (!roles.includes(req.body.role)) {
-      next(new AppError('you don not have the permission', 403));
-    }
-    next();
-  };
-
 /// sign up and creating account
-exports.signup = catchAsync(async (req, res, next) => {
-  const { stack, name, email, password, passwordConfirm, role } = req.body;
+exports.signup = catchAsync(async (req, res) => {
+  const { stack, name, email, password, role } = req.body;
 
   // 1. Validate input
-  if (!stack || !name || !email || !password || !passwordConfirm) {
+  if (!stack || !name || !email || !password) {
     return res
       .status(400)
       .json({ message: 'Please provide all required fields' });
@@ -34,7 +25,6 @@ exports.signup = catchAsync(async (req, res, next) => {
       name,
       email,
       password,
-      passwordConfirm,
       profilePhoto,
       stack,
       role,

@@ -37,17 +37,6 @@ const userSchema = new mongoose.Schema({
     required: [true, 'please enter your password'],
     minlength: 8,
   },
-  passwordConfirm: {
-    type: String,
-    required: [true, 'please confirm your password.'],
-    validate: {
-      validator: function (el) {
-        return el === this.password;
-      },
-      messagge: 'Password should be the same.',
-    },
-    select: false,
-  },
   role: {
     type: String,
     enum: ['intern', 'trainer'],
@@ -55,15 +44,6 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.set('toJSON', { virtuals: true });
-userSchema.set('toObject', { virtuals: true });
-
-/// virtual populate
-userSchema.virtual('reports', {
-  ref: 'Report',
-  foreignField: 'user',
-  localField: '_id',
-});
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();

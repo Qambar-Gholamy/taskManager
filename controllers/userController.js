@@ -48,15 +48,7 @@ exports.createUser = catchAsync(async (req, res, next) => {
 });
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  let query = await User.findById(req.params.id);
-
-  if (req.params.role === 'intern')
-    query = query.populate({
-      path: 'reports',
-      select: '-intern',
-    });
-
-  const user = await query;
+  let user = await User.findById(req.params.id);
 
   if (!user) {
     return next(new AppError('no user found with this ID', 404));

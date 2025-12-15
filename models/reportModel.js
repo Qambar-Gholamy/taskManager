@@ -18,10 +18,9 @@ const reportSchema = mongoose.Schema(
       trim: true,
     },
 
-    intern: {
+    creator: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
-      match: { role: 'intern' },
     },
     trainer: {
       type: mongoose.Schema.ObjectId,
@@ -56,8 +55,8 @@ const reportSchema = mongoose.Schema(
 
 reportSchema.pre(/^find/, function (next) {
   this.populate({
-    path: 'intern',
-    match: { role: 'intern' },
+    path: 'creator',
+    model: 'User',
     select: 'name stack profilePhoto',
   });
   next();
