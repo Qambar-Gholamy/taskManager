@@ -7,7 +7,6 @@ const { Error } = require('mongoose');
 
 /// sign up and creating account
 exports.signup = catchAsync(async (req, res) => {
-  console.log(req.body);
   const { stack, name, email, password, role } = req.body;
 
   // 1. Validate input

@@ -20,7 +20,6 @@ exports.cloudinaryUpload= catchAsync(async (req, res, next) => {
         folder: "profiles",
         format: "jpg",
         transformation: [
-          { width: 500, height: 500, crop: "fill", gravity: "auto" },
           { quality: "auto", fetch_format: "auto" }
         ]
       },
