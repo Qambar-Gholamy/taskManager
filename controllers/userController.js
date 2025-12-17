@@ -1,23 +1,43 @@
+//** eslint-ignore */ 
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 const User = require('../models/userModel');
-const sharp = require('sharp');
-const { upload } = require('../utils/multerUpload');
+const { cloudinary }=require('../utils/imageUpload');
+const Report = require('../models/reportModel');
+const multer= require('multer');
 
-exports.uploadImage = upload.single('profilePhoto');
+const upload = multer({
+  storage: multer.memoryStorage(),
+});
 
-exports.resizePhoto = catchAsync(async (req, res, next) => {
+exports.uploadImage =upload.single('profilePhoto');
+
+exports.cloudinaryUpload= catchAsync(async (req, res, next) => {
   if (!req.file) return next();
+   const uploadResult = await new Promise((resolve, reject) => {
+    cloudinary.uploader.upload_stream(
+      {
+        folder: "profiles",
+        format: "jpg",
+        transformation: [
+          { width: 500, height: 500, crop: "fill", gravity: "auto" },
+          { quality: "auto", fetch_format: "auto" }
+        ]
+      },
+      (error, result) => {
+        if (error) reject(error);
+        resolve(result);
+      }
+    ).end(req.file.buffer);
+  });
 
-  req.file.filename = `img-${parseInt(Math.random() * 1000000)}-${new Date().toISOString().split('T')[0]}.jpeg`;
-  await sharp(req.file.buffer)
-    .resize(500, 500)
-    .toFormat('jpeg')
-    .jpeg({ quality: 90 })
-    .toFile(`public/imgs/${req.file.filename}`);
+  req.file.cloudinary = {
+    url: uploadResult.secure_url,
+    public_id: uploadResult.public_id,
+  };
 
   next();
-});
+  });
 
 exports.getAllInterns = catchAsync(async (req, res, next) => {
   docs = await User.find({ role: 'intern' });

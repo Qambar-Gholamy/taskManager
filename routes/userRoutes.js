@@ -9,7 +9,7 @@ const Router = express.Router();
 Router.post(
   '/signup',
   userController.uploadImage,
-  userController.resizePhoto,
+  userController.cloudinaryUpload,
   authController.signup,
 );
 Router.post('/login', authController.login);
