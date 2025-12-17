@@ -151,8 +151,8 @@ exports.updateReport = catchAsync(async (req, res, next) => {
 
 exports.deleteReport = catchAsync(async (req, res, next) => {
   const doc = await Report.findOneAndDelete({
-    _id: req.body.id,
-    creator: req.user.id
+    _id: req.params.id,
+    creator:req.user._id,
   });
 
   if (!doc) {

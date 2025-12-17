@@ -15,6 +15,7 @@ Router.route('/myreports').get(reportController.myReports);
 
 Router.route('/:id')
   .get(reportController.getReport)
-  .patch(reportController.updateReport)
-  .delete(reportController.deleteReport);
+  .delete(reportController.deleteReport)
+  .patch(reportController.updateReport);
+  
 module.exports = Router;

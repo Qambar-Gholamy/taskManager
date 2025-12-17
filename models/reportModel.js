@@ -19,7 +19,7 @@ const reportSchema = mongoose.Schema(
     },
 
     creator: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
     },
     trainer: {
