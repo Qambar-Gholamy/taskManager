@@ -39,7 +39,7 @@ exports.cloudinaryUpload= catchAsync(async (req, res, next) => {
   });
 
 exports.getAllInterns = catchAsync(async (req, res, next) => {
-  docs = await User.find({ role: 'intern' });
+  docs = await User.find();
 
   res.status(200).json({
     status: 'success',
