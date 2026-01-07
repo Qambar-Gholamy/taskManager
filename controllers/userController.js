@@ -10,7 +10,7 @@ const upload = multer({
   storage: multer.memoryStorage(),
 });
 
-exports.uploadImage =upload.single('profilePhoto');
+exports.uploadImage = upload.single('profilePhoto');
 
 exports.cloudinaryUpload= catchAsync(async (req, res, next) => {
   if (!req.file) return next();

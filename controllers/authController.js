@@ -18,7 +18,7 @@ exports.signup = catchAsync(async (req, res) => {
 
   const profilePhoto = req.file
     ? req.file.cloudinary.url
-    : `/public/imgs/default.jpeg`;
+    : `https://res.cloudinary.com/degmttaep/image/upload/v1767790093/profiles/p3tlwcypnz3jukx2bodm.jpg`;
 
   try {
     newUser = await User.create({
